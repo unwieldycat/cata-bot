@@ -18,3 +18,7 @@ extern pros::Motor latch;
 // Claw motors
 extern pros::Motor claw_pinch;
 extern pros::Motor claw_vert;
+
+// ====================== Device Function Declarations ====================== //
+
+extern void cata_control();

@@ -1,5 +1,4 @@
 #include "devices.hpp"
-#include "pros/misc.h"
 
 // =========================== Device Definitions =========================== //
 
@@ -11,11 +10,40 @@ pros::Motor drive_l(1);
 pros::Motor drive_r(2);
 
 // Catapult motors
-pros::Motor primer(3);
-pros::Motor latch(4);
+pros::Motor primer(3, pros::motor_gearset_e::E_MOTOR_GEAR_RED);
+pros::Motor latch(4, pros::motor_gearset_e::E_MOTOR_GEAR_RED);
 
 // Claw motors
 pros::Motor claw_pinch(5);
 pros::Motor claw_vert(6);
 
+// ADI Devices
+pros::ADIDigitalIn cata_limit('A');
+
 // ============================ Device Functions ============================ //
+
+void cata_control() {
+	while (true) {
+		if (master_controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_X)) {
+			if (!cata_limit.get_value()) {
+				master_controller.set_text(1, 1, "Not primed!");
+				master_controller.rumble("-");
+				continue;
+			}
+
+			latch.move_relative(0, 200);
+		}
+
+		if (master_controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_Y)) {
+			latch.move_relative(90, 100);
+			primer.move(127);
+
+			while (!cata_limit.get_value()) {
+				pros::delay(100);
+			}
+
+			latch.move_relative(-90, 100);
+			primer.move_absolute(0, 200);
+		}
+	}
+}
