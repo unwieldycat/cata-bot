@@ -56,4 +56,5 @@ void autonomous() {}
 void opcontrol() {
 	pros::Task cata_thread(cata_control);
 	pros::Task drive_thread(drive_control);
+	pros::Task claw_thread(claw_control);
 }

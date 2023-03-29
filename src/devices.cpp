@@ -1,4 +1,5 @@
 #include "devices.hpp"
+#include "pros/motors.h"
 
 // =========================== Device Definitions =========================== //
 
@@ -54,6 +55,48 @@ void cata_control() {
 			latch.brake();
 
 			cata_primed = true;
+		}
+	}
+}
+
+void claw_control() {
+	bool open;
+	bool close;
+	bool up;
+	bool down;
+	bool lat_active;
+	bool pinch_active;
+
+	claw_vert.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
+	claw_pinch.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
+
+	while (true) {
+		up = master_controller.get_digital(pros::E_CONTROLLER_DIGITAL_UP);
+		down = master_controller.get_digital(pros::E_CONTROLLER_DIGITAL_DOWN);
+
+		if (up && !down) {
+			claw_vert.move(32);
+			lat_active = true;
+		} else if (down && !up) {
+			claw_vert.move(-32);
+			lat_active = true;
+		} else if (lat_active) {
+			claw_vert.brake();
+			lat_active = false;
+		}
+
+		open = master_controller.get_digital(pros::E_CONTROLLER_DIGITAL_LEFT);
+		close = master_controller.get_digital(pros::E_CONTROLLER_DIGITAL_RIGHT);
+
+		if (open && !close) {
+			claw_pinch.move(32);
+			pinch_active = true;
+		} else if (close && !open) {
+			claw_pinch.move(32);
+			pinch_active = true;
+		} else if (pinch_active) {
+			claw_pinch.brake();
+			pinch_active = false;
 		}
 	}
 }

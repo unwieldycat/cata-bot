@@ -24,4 +24,5 @@ extern pros::Motor claw_vert;
 
 extern bool cata_primed;
 extern void cata_control();
+extern void claw_control();
 extern void drive_control();
