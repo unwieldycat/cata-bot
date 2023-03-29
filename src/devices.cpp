@@ -6,8 +6,9 @@
 pros::Controller master_controller(pros::E_CONTROLLER_MASTER);
 
 // Drivetrain motors
-pros::Motor drive_l(1);
-pros::Motor drive_r(2);
+pros::Motor drive_l(18);
+pros::Motor drive_r(19);
+pros::Motor drive_m(20);
 
 // Catapult motors
 pros::Motor primer(3, pros::motor_gearset_e::E_MOTOR_GEAR_RED);
