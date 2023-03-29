@@ -22,28 +22,42 @@ pros::ADIDigitalIn cata_limit('A');
 
 // ============================ Device Functions ============================ //
 
+bool cata_primed;
+
 void cata_control() {
 	while (true) {
 		if (master_controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_X)) {
-			if (!cata_limit.get_value()) {
+			if (!cata_primed) {
 				master_controller.set_text(1, 1, "Not primed!");
 				master_controller.rumble("-");
 				continue;
 			}
 
-			latch.move_relative(0, 200);
+			latch.move_absolute(0, 200);
+			cata_primed = false;
 		}
 
 		if (master_controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_Y)) {
-			latch.move_relative(90, 100);
+			if (cata_primed) continue;
+
+			latch.move_relative(120, 200);
 			primer.move(127);
 
 			while (!cata_limit.get_value()) {
 				pros::delay(100);
 			}
 
-			latch.move_relative(-90, 100);
+			primer.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
+			primer.brake();
+
+			latch.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
+			latch.move_relative(-670, 200);
+
+			pros::delay(2000);
+
 			primer.move_absolute(0, 200);
+
+			cata_primed = true;
 		}
 	}
 }
