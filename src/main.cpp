@@ -53,4 +53,7 @@ void autonomous() {}
  * operator control task will be stopped. Re-enabling the robot will restart the
  * task, not resume it from where it left off.
  */
-void opcontrol() { pros::Task cata_thread(cata_control); }
+void opcontrol() {
+	pros::Task cata_thread(cata_control);
+	pros::Task drive_thread(drive_control);
+}

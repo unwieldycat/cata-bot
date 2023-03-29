@@ -6,7 +6,7 @@
 pros::Controller master_controller(pros::E_CONTROLLER_MASTER);
 
 // Drivetrain motors
-pros::Motor drive_l(18);
+pros::Motor drive_l(-18);
 pros::Motor drive_r(19);
 pros::Motor drive_m(20);
 
@@ -59,6 +59,27 @@ void cata_control() {
 			primer.move_absolute(0, 200);
 
 			cata_primed = true;
+		}
+	}
+}
+
+void drive_control() {
+	float turn;
+	float drive;
+	bool active;
+
+	while (true) {
+		turn = master_controller.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_X);
+		drive = master_controller.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y);
+
+		if ((turn < -0.5 || turn > 0.5) || (drive < -0.5 || drive > 0.5)) {
+			drive_l.move(drive - turn);
+			drive_r.move(drive + turn);
+			active = true;
+		} else if (active) {
+			drive_l.brake();
+			drive_r.brake();
+			active = false;
 		}
 	}
 }
