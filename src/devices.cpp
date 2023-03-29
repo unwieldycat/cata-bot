@@ -28,13 +28,7 @@ bool cata_primed;
 void cata_control() {
 	while (true) {
 		if (master_controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_X)) {
-			if (!cata_primed) {
-				master_controller.set_text(1, 1, "Not primed!");
-				master_controller.rumble("-");
-				continue;
-			}
-
-			latch.move_absolute(0, 200);
+			latch.move_relative(670, 200);
 			cata_primed = false;
 		}
 
@@ -52,11 +46,12 @@ void cata_control() {
 			primer.brake();
 
 			latch.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
-			latch.move_relative(-670, 200);
+			latch.move(-64);
 
 			pros::delay(2000);
 
 			primer.move_absolute(0, 200);
+			latch.brake();
 
 			cata_primed = true;
 		}
