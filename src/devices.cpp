@@ -9,7 +9,7 @@ pros::Controller master_controller(pros::E_CONTROLLER_MASTER);
 // Drivetrain motors
 pros::Motor drive_l(-18);
 pros::Motor drive_r(19);
-pros::Motor drive_m(20);
+pros::Motor drive_m(-20);
 
 // Catapult motors
 pros::Motor primer(3, pros::motor_gearset_e::E_MOTOR_GEAR_RED);
@@ -102,21 +102,26 @@ void claw_control() {
 }
 
 void drive_control() {
-	float turn;
-	float drive;
+	int turn;
+	int drive;
+	int strafe;
 	bool active;
 
 	while (true) {
 		turn = master_controller.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_X);
 		drive = master_controller.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y);
+		strafe = master_controller.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_X);
 
-		if ((turn < -0.5 || turn > 0.5) || (drive < -0.5 || drive > 0.5)) {
+		if ((turn < -0.5 || turn > 0.5) || (drive < -0.5 || drive > 0.5) ||
+		    (strafe < -0.5 || strafe > 0.5)) {
 			drive_l.move(drive - turn);
 			drive_r.move(drive + turn);
+			drive_m.move(strafe);
 			active = true;
 		} else if (active) {
 			drive_l.brake();
 			drive_r.brake();
+			drive_m.move(strafe);
 			active = false;
 		}
 	}
