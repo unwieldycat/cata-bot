@@ -75,10 +75,10 @@ void claw_control() {
 		down = master_controller.get_digital(pros::E_CONTROLLER_DIGITAL_DOWN);
 
 		if (up && !down) {
-			claw_vert.move(32);
+			claw_vert.move(-32);
 			lat_active = true;
 		} else if (down && !up) {
-			claw_vert.move(-32);
+			claw_vert.move(32);
 			lat_active = true;
 		} else if (lat_active) {
 			claw_vert.brake();
