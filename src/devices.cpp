@@ -7,8 +7,8 @@
 pros::Controller master_controller(pros::E_CONTROLLER_MASTER);
 
 // Drivetrain motors
-pros::Motor drive_l(-18);
-pros::Motor drive_r(19);
+pros::Motor drive_l(18);
+pros::Motor drive_r(-19);
 pros::Motor drive_m(-20);
 
 // Catapult motors
@@ -78,7 +78,7 @@ void claw_control() {
 			claw_vert.move(-32);
 			lat_active = true;
 		} else if (down && !up) {
-			claw_vert.move(32);
+			claw_vert.move(16);
 			lat_active = true;
 		} else if (lat_active) {
 			claw_vert.brake();
@@ -89,10 +89,10 @@ void claw_control() {
 		close = master_controller.get_digital(pros::E_CONTROLLER_DIGITAL_RIGHT);
 
 		if (open && !close) {
-			claw_pinch.move(32);
+			claw_pinch.move(64);
 			pinch_active = true;
 		} else if (close && !open) {
-			claw_pinch.move(32);
+			claw_pinch.move(-64);
 			pinch_active = true;
 		} else if (pinch_active) {
 			claw_pinch.brake();
@@ -114,8 +114,8 @@ void drive_control() {
 
 		if ((turn < -0.5 || turn > 0.5) || (drive < -0.5 || drive > 0.5) ||
 		    (strafe < -0.5 || strafe > 0.5)) {
-			drive_l.move(drive - turn);
-			drive_r.move(drive + turn);
+			drive_l.move(drive + turn);
+			drive_r.move(drive - turn);
 			drive_m.move(strafe);
 			active = true;
 		} else if (active) {
