@@ -7,7 +7,7 @@
  * All other competition modes are blocked by initialize; it is recommended
  * to keep execution time for this mode under a few seconds.
  */
-void initialize() {}
+void initialize() { latch_pot.calibrate(); }
 
 /**
  * Runs while the robot is in the disabled state of Field Management System or
