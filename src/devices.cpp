@@ -1,4 +1,5 @@
 #include "devices.hpp"
+#include "pros/adi.hpp"
 #include "pros/motors.h"
 
 // =========================== Device Definitions =========================== //
@@ -21,6 +22,7 @@ pros::Motor claw_vert(6);
 
 // ADI Devices
 pros::ADIDigitalIn cata_limit('A');
+pros::ADIAnalogIn latch_pot('B');
 
 // ============================ Device Functions ============================ //
 
@@ -28,7 +30,8 @@ bool cata_primed;
 
 void cata_control() {
 	while (true) {
-		if (master_controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_X)) {
+		if (master_controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_X) &&
+		    latch_pot.get_value_calibrated() < 16) {
 			latch.move_relative(670, 200);
 			cata_primed = false;
 		}
