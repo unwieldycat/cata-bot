@@ -20,6 +20,10 @@ extern pros::Motor latch;
 extern pros::Motor claw_pinch;
 extern pros::Motor claw_vert;
 
+// ADI Devices
+extern pros::ADIDigitalIn cata_limit;
+extern pros::ADIAnalogIn latch_pot;
+
 // ====================== Device Function Declarations ====================== //
 
 extern bool cata_primed;
